@@ -22,14 +22,14 @@ match _ [] [] = Just []
 match _ [] _ = Nothing
 -- the  pattern list is not empty, the other list is
 match _ _ [] = Nothing
--- two non empty lits
+-- two non empty lists
 match wc (p:ps) (x:xs)
     -- | first element matches wildcard
     | wc /= p = (if p /= x then Nothing else match wc ps xs)
     -- | first element does not match wildcard
-    | otherwise = let sWM = singleWildcardMatch (p:ps) (x:xs)
-                      lWM = longerWildcardMatch (p:ps) (x:xs)
-                  in orElse sWM lWM
+    | otherwise = let swm = singleWildcardMatch (p:ps) (x:xs)
+                      lwm = longerWildcardMatch (p:ps) (x:xs)
+                  in orElse swm lwm
 
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => [a] -> [a] -> Maybe [a]
