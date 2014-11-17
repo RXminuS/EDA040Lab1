@@ -17,7 +17,13 @@ substitute _ _ _ = []
 match :: Eq a => a -> [a] -> [a] -> Maybe [a]
 match _ _ _ = Nothing
 {- TO BE WRITTEN -}
-
+{- PATTERNS -}
+-- both lists are empty
+-- pattern is empty the other list is not
+-- the  pattern list is empty other list is not
+-- two non empty lits
+    -- | first element matches wildcard
+    -- | first element does not match wildcard
 
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => [a] -> [a] -> Maybe [a]
@@ -25,8 +31,6 @@ singleWildcardMatch (wc:ps) (x:xs) = Nothing
 {- TO BE WRITTEN -}
 longerWildcardMatch (wc:ps) (x:xs) = Nothing
 {- TO BE WRITTEN -}
-
-
 
 -- Test cases --------------------
 
