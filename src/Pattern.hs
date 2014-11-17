@@ -33,10 +33,11 @@ match wc (p:ps) (x:xs)
 
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => [a] -> [a] -> Maybe [a]
-singleWildcardMatch (wc:ps) (x:xs) = Nothing
-{- TO BE WRITTEN -}
-longerWildcardMatch (wc:ps) (x:xs) = Nothing
-{- TO BE WRITTEN -}
+singleWildcardMatch (wc:ps) (x:xs) = let mtc = match wc ps xs
+                                     in (if mtc /= Nothing then (Just [x]) else Nothing)
+
+longerWildcardMatch (wc:ps) (x:xs) = let mtc = match wc (wc:ps) xs
+                                     in mmap (x:) mtc
 
 -- Test cases --------------------
 
