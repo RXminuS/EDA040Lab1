@@ -8,23 +8,28 @@ import Utilities
 
 -- Replaces a wildcard in a list with the list given as the third argument
 substitute :: Eq a => a -> [a] -> [a] -> [a]
-substitute w [] s = []
-substitute w (x:xs) s
-    | w == x = s ++ (substitute w xs s)
-    | otherwise = x:(substitute w xs s)
+substitute _ [] _ = []
+substitute wc (x:xs) s
+    | wc == x = s ++ (substitute wc xs s)
+    | otherwise = x:(substitute wc xs s)
 
 -- Tries to match two lists. If they match, the result consists of the sublist
 -- bound to the wildcard in the pattern list.
 match :: Eq a => a -> [a] -> [a] -> Maybe [a]
-match _ _ _ = Nothing
-{- TO BE WRITTEN -}
-{- PATTERNS -}
 -- both lists are empty
--- pattern is empty the other list is not
--- the  pattern list is empty other list is not
+match _ [] [] = Just []
+-- pattern is empty, the other list is not
+match _ [] _ = Nothing
+-- the  pattern list is not empty, the other list is
+match _ _ [] = Nothing
 -- two non empty lits
+match wc (p:ps) (x:xs)
     -- | first element matches wildcard
+    | wc /= p = (if p /= x then Nothing else match wc ps xs)
     -- | first element does not match wildcard
+    | otherwise = let sWM = singleWildcardMatch (p:ps) (x:xs)
+                      lWM = longerWildcardMatch (p:ps) (x:xs)
+                  in orElse sWM lWM
 
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => [a] -> [a] -> Maybe [a]
