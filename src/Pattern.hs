@@ -8,7 +8,10 @@ import Utilities
 
 -- Replaces a wildcard in a list with the list given as the third argument
 substitute :: Eq a => a -> [a] -> [a] -> [a]
-substitute _ _ _ = []
+substitute wildcard [] s = []
+substitute wildcard (x:xs) s
+   | x == wildcard = s ++ (substitute wildcard xs s)
+   | otherwise = x:(substitute wildcard xs s)
 {- TO BE WRITTEN -}
 
 
