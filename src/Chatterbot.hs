@@ -27,11 +27,24 @@ type BotBrain = [(Phrase, [Phrase])]
 --------------------------------------------------------
 
 stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
-{- TO BE WRITTEN -}
-stateOfMind _ = return id
+{-stateOfMind bb = do rulesApply rand_list 
+    where rand_list = (foldl g [] bb)
+          g acc b = [fst b, h (snd b)]:acc
+          h lst = do
+              r <- randomIO 
+              pick r lst-}
 
+stateOfMind botbrain = do  
+    r <- randomIO :: IO Float
+    let rand_list =(foldl g [] botbrain)
+        g acc b = (fst b, random_choice (snd b)):acc
+        random_choice lst = pick r lst
+    return (rulesApply rand_list)
+
+              
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
 {- TO BE WRITTEN -}
+
 rulesApply = try . (transformationsApply "*" reflect {-[PhrasePair]-} {-Phrase-})
 
 reflect :: Phrase -> Phrase
