@@ -33,7 +33,10 @@ match wc pattern@(p:ps) string@(x:xs)
 
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => [a] -> [a] -> Maybe [a]
-singleWildcardMatch         (wc:ps)     (x:xs) = mmap (x:) $ match wc ps xs
+--singleWildcardMatch         (wc:ps)     (x:xs) = mmap (x:) $ match wc ps xs
+singleWildcardMatch (wc:ps) (x:xs) = let mtc = match wc ps xs
+                                     in (if mtc /= Nothing then (Just [x]) else Nothing)
+                                     
 longerWildcardMatch pattern@(wc:_)      (x:xs) = mmap (x:) $ match wc pattern xs
 
 -- Test cases --------------------

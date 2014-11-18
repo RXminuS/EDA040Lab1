@@ -38,7 +38,7 @@ stateOfMind botbrain = do
               
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
 rulesApply = try . (transformationsApply "*" reflect {-[PhrasePair]-} {-Phrase-})
-
+ 
 reflect :: Phrase -> Phrase
 reflect = (map.try.rlookup) reflections
           where rlookup = flip lookup
@@ -76,9 +76,9 @@ prepare = reduce . words . map toLower . filter (not . flip elem ".,:;*!#%&|")
 
 rulesCompile :: [(String, [String])] -> BotBrain
 rulesCompile [] = []
-rulesCompile (b:botbrain) = (words.fst $ b, h $ snd b):(rulesCompile botbrain)
+rulesCompile (b:botbrain) = (words.map toLower.fst $ b, h $ snd b):(rulesCompile botbrain)
     where h [] = []
-          h (x:xs) = (words x):(h xs)
+          h (x:xs) = (words.map toLower $ x):(h xs)
 
 --------------------------------------
 
