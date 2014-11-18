@@ -28,14 +28,11 @@ type BotBrain = [(Phrase, [Phrase])]
 
 stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
 
-stateOfMind botbrain = do  
-    r <- randomIO :: IO Float
-    let rand_lphrasepair = foldr g [] botbrain
-        g b acc = (fst b, random_choice $ snd b):acc
-        random_choice listofphrase = pick r listofphrase
-    return (rulesApply rand_lphrasepair)
-    
-              
+stateOfMind botbrain = do
+    r <- randomIO :: IO Float 
+    return (rulesApply $ (map.map2) (id, pick r) botbrain)
+
+            
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
 rulesApply = try . (transformationsApply "*" reflect {-[PhrasePair]-} {-Phrase-})
  
@@ -75,7 +72,7 @@ prepare :: String -> Phrase
 prepare = reduce . words . map toLower . filter (not . flip elem ".,:;*!#%&|")
 
 rulesCompile :: [(String, [String])] -> BotBrain
-rulesCompile = (map.map2) (words.map toLower, map $ words . map toLower) 
+rulesCompile = (map.map2) (words.map toLower, map $ words . map toLower)
  
 --------------------------------------
 
