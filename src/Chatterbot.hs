@@ -36,10 +36,10 @@ stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
 
 stateOfMind botbrain = do  
     r <- randomIO :: IO Float
-    let rand_list =(foldl g [] botbrain)
-        g acc b = (fst b, random_choice (snd b)):acc
-        random_choice lst = pick r lst
-    return (rulesApply rand_list)
+    let rand_lphrasepair = foldr g [] botbrain
+        g b acc = (fst b, random_choice $ snd b):acc
+        random_choice listofphrase = pick r listofphrase
+    return (rulesApply rand_lphrasepair)
 
               
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
