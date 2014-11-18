@@ -34,11 +34,9 @@ stateOfMind botbrain = do
         g b acc = (fst b, random_choice $ snd b):acc
         random_choice listofphrase = pick r listofphrase
     return (rulesApply rand_lphrasepair)
-
+    
               
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
-{- TO BE WRITTEN -}
-
 rulesApply = try . (transformationsApply "*" reflect {-[PhrasePair]-} {-Phrase-})
 
 reflect :: Phrase -> Phrase
@@ -77,9 +75,10 @@ prepare :: String -> Phrase
 prepare = reduce . words . map toLower . filter (not . flip elem ".,:;*!#%&|")
 
 rulesCompile :: [(String, [String])] -> BotBrain
-{- TO BE WRITTEN -}
-rulesCompile _ = []
-
+rulesCompile [] = []
+rulesCompile (b:botbrain) = (words.fst $ b, h $ snd b):(rulesCompile botbrain)
+    where h [] = []
+          h (x:xs) = (words x):(h xs)
 
 --------------------------------------
 
