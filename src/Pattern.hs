@@ -23,21 +23,18 @@ match _ [] _ = Nothing
 -- the  pattern list is not empty, the other list is
 match _ _ [] = Nothing
 -- two non empty lists
-match wc (p:ps) (x:xs)
+match wc pattern@(p:ps) string@(x:xs)
     -- | first element matches wildcard
     | wc /= p = (if p /= x then Nothing else match wc ps xs)
     -- | first element does not match wildcard
-    | otherwise = let swm = singleWildcardMatch (p:ps) (x:xs)
-                      lwm = longerWildcardMatch (p:ps) (x:xs)
-                  in orElse swm lwm
+    | otherwise = orElse swm lwm
+    where swm = singleWildcardMatch pattern string
+          lwm = longerWildcardMatch pattern string
 
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => [a] -> [a] -> Maybe [a]
-singleWildcardMatch (wc:ps) (x:xs) = let mtc = match wc ps xs
-                                     in (if mtc /= Nothing then (Just [x]) else Nothing)
-
-longerWildcardMatch (wc:ps) (x:xs) = let mtc = match wc (wc:ps) xs
-                                     in mmap (x:) mtc
+singleWildcardMatch         (wc:ps)     (x:xs) = mmap (x:) $ match wc ps xs
+longerWildcardMatch pattern@(wc:_)      (x:xs) = mmap (x:) $ match wc pattern xs
 
 -- Test cases --------------------
 
@@ -50,7 +47,6 @@ substituteCheck = substituteTest == testString
 
 matchTest = match '*' testPattern testString
 matchCheck = matchTest == Just testSubstitutions
-
 
 
 -------------------------------------------------------
