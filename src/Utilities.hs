@@ -1,0 +1,27 @@
+module Utilities where
+
+-- |The 'map2' function applies a pair of functions to a pair of arguments
+-- It takes a pair of functions and a pair of arguments
+map2 :: (a -> b, c -> d) -> (a, c) -> (b, d)
+map2 (f1, f2) (x1, x2) = (f1 x1, f2 x2)
+
+-- |The 'mmap' function maps a function to it's argument if both are not nothing
+-- It takes a function and argument to apply it to
+mmap :: (a -> b) -> Maybe a -> Maybe b
+mmap f  Nothing  = Nothing
+mmap f (Just x)  = Just (f x)
+
+orElse :: Maybe a -> Maybe a -> Maybe a
+orElse Nothing  x  = x
+orElse (Just a) _  = Just a
+
+try :: (a -> Maybe a) -> a -> a
+try f x = maybe x id (f x)
+
+fix :: Eq a => (a -> a) -> a -> a
+fix f x
+   |  f x == x  = x
+   |  otherwise = fix f (f x)
+
+pick :: RealFrac r => r -> [a] -> a
+pick u xs = xs !! (floor.(u*).fromIntegral.length) xs
