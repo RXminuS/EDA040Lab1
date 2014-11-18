@@ -32,11 +32,11 @@ stateOfMind _ = return id
 
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
 {- TO BE WRITTEN -}
-rulesApply _ = id
+rulesApply = try . (transformationsApply "*" id {-[PhrasePair]-} {-Phrase-})
 
 reflect :: Phrase -> Phrase
 reflect = map (try (rlookup reflections))
-          where rlookup = (flip lookup)
+            where rlookup = (flip lookup)
 
 reflections =
   [ ("am",     "are"),
