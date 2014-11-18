@@ -66,6 +66,7 @@ transformationApply wc f xs (ps1,ps2) = let mtc = match wc ps1 xs
 
 -- Applying a list of patterns until one succeeds
 transformationsApply :: Eq a => a -> ([a] -> [a]) -> [([a], [a])] -> [a] -> Maybe [a]
-transformationsApply _ _ _ _ = Nothing
-{- TO BE WRITTEN -}
-
+transformationsApply _ _ [] _ = Nothing
+transformationsApply wc f (p:ps) xs = orElse tf tfs
+    where tf = transformationApply wc f xs p
+          tfs = transformationsApply wc f ps xs
