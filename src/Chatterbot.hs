@@ -27,12 +27,6 @@ type BotBrain = [(Phrase, [Phrase])]
 --------------------------------------------------------
 
 stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
-{-stateOfMind bb = do rulesApply rand_list 
-    where rand_list = (foldl g [] bb)
-          g acc b = [fst b, h (snd b)]:acc
-          h lst = do
-              r <- randomIO 
-              pick r lst-}
 
 stateOfMind botbrain = do  
     r <- randomIO :: IO Float
