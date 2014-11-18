@@ -59,9 +59,10 @@ matchCheck = matchTest == Just testSubstitutions
 
 -- Applying a single pattern
 transformationApply :: Eq a => a -> ([a] -> [a]) -> [a] -> ([a], [a]) -> Maybe [a]
-transformationApply _ _ _ _ = Nothing
-{- TO BE WRITTEN -}
-
+transformationApply wc f xs (ps1,ps2) = let mtc = match wc ps1 xs
+                                            mtc2 = mmap f mtc
+                                            g = substitute wc ps2
+                                        in mmap g mtc2
 
 -- Applying a list of patterns until one succeeds
 transformationsApply :: Eq a => a -> ([a] -> [a]) -> [([a], [a])] -> [a] -> Maybe [a]
