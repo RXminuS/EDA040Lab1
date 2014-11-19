@@ -23,19 +23,18 @@ type Phrase = [String]
 type PhrasePair = (Phrase, Phrase)
 type BotBrain = [(Phrase, [Phrase])]
 
-
 --------------------------------------------------------
 
 stateOfMind :: BotBrain -> IO (Phrase -> Phrase)
 
 stateOfMind botbrain = do
-    r <- randomIO :: IO Float 
+    r <- randomIO :: IO Float
     return (rulesApply $ (map.map2) (id, pick r) botbrain)
 
-            
+
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
 rulesApply = try . (transformationsApply "*" reflect {-[PhrasePair]-} {-Phrase-})
- 
+
 reflect :: Phrase -> Phrase
 reflect = (map.try.rlookup) reflections
           where rlookup = flip lookup
@@ -59,7 +58,6 @@ reflections =
     ("you",    "me")
   ]
 
-
 ---------------------------------------------------------------------------------
 
 endOfDialog :: String -> Bool
@@ -73,9 +71,8 @@ prepare = reduce . words . map toLower . filter (not . flip elem ".,:;*!#%&|")
 
 rulesCompile :: [(String, [String])] -> BotBrain
 rulesCompile = (map.map2) (words.map toLower, map $ words . map toLower)
- 
---------------------------------------
 
+--------------------------------------
 
 reductions :: [PhrasePair]
 reductions = (map.map2) (words, words)
@@ -96,7 +93,4 @@ reduce :: Phrase -> Phrase
 reduce = reductionsApply reductions
 
 reductionsApply :: [PhrasePair] -> Phrase -> Phrase
-{- TO BE WRITTEN -}
-reductionsApply _ = id
-
-
+reductionsApply = fix . try . transformationsApply "*" id {-- PhrasePair --} {-- Phrase --}

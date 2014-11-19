@@ -33,10 +33,10 @@ match wc pattern@(p:ps) string@(x:xs)
 
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => [a] -> [a] -> Maybe [a]
---singleWildcardMatch         (wc:ps)     (x:xs) = mmap (x:) $ match wc ps xs
+-- singleWildcardMatch         (wc:ps)     (x:xs) = mmap (x:) $ match wc ps xs
 singleWildcardMatch (wc:ps) (x:xs) = let mtc = match wc ps xs
                                      in (if mtc /= Nothing then (Just [x]) else Nothing)
-                                     
+
 longerWildcardMatch pattern@(wc:_)      (x:xs) = mmap (x:) $ match wc pattern xs
 
 -- Test cases --------------------
@@ -51,7 +51,6 @@ substituteCheck = substituteTest == testString
 matchTest = match '*' testPattern testString
 matchCheck = matchTest == Just testSubstitutions
 
-
 -------------------------------------------------------
 -- Applying patterns
 --------------------------------------------------------
@@ -62,6 +61,12 @@ transformationApply wc f xs (ps1,ps2) = let mtc = match wc ps1 xs
                                             mtc2 = mmap f mtc
                                             g = substitute wc ps2
                                         in mmap g mtc2
+
+
+-- WE'RE TRYING TO REWRITE THIS POINT FREE BUT ARE STUCK...ANY COMMENTS ON IF THIS IS REQUIRED
+-- AND HOW TO PROCEED ARE 'VERY VERY VERY WELCOME' :P (REDUCTIONS NOT YET APPLIED)
+--transformationApply wc f xs = mmap.flip.map2 (mmap f $ flipedmatch xs, substitute wc)
+--                            where flipedmatch = flip $ match wc
 
 -- Applying a list of patterns until one succeeds
 transformationsApply :: Eq a => a -> ([a] -> [a]) -> [([a], [a])] -> [a] -> Maybe [a]
