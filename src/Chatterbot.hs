@@ -33,11 +33,10 @@ stateOfMind botbrain = do
 
 
 rulesApply :: [PhrasePair] -> Phrase -> Phrase
-rulesApply = try . (transformationsApply "*" reflect {-[PhrasePair]-} {-Phrase-})
+rulesApply = try . (transformationsApply "*" reflect )
 
 reflect :: Phrase -> Phrase
-reflect = (map.try.rlookup) reflections
-          where rlookup = flip lookup
+reflect = (map.try.flip lookup) reflections
 
 reflections =
   [ ("am",     "are"),
@@ -93,4 +92,4 @@ reduce :: Phrase -> Phrase
 reduce = reductionsApply reductions
 
 reductionsApply :: [PhrasePair] -> Phrase -> Phrase
-reductionsApply = fix . try . transformationsApply "*" id {-- PhrasePair --} {-- Phrase --}
+reductionsApply = fix . try . transformationsApply "*" id 

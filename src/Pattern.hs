@@ -57,20 +57,17 @@ matchCheck = matchTest == Just testSubstitutions
 
 -- Applying a single pattern
 transformationApply :: Eq a => a -> ([a] -> [a]) -> [a] -> ([a], [a]) -> Maybe [a]
-transformationApply wc f xs (ps1,ps2) = let mtc = match wc ps1 xs
-                                            mtc2 = mmap f mtc
-                                            g = substitute wc ps2
-                                        in mmap g mtc2
+--transformationApply wc f xs (ps1,ps2) = let mtc = match wc ps1 xs
+--                                            mtc2 = mmap f mtc
+--                                            g = substitute wc ps2
+--                                       in mmap g mtc2
+transformationApply wc f xs (ps1,ps2) = mmap ((substitute wc ps2).f) (match wc ps1 xs)
 
-
--- WE'RE TRYING TO REWRITE THIS POINT FREE BUT ARE STUCK...ANY COMMENTS ON IF THIS IS REQUIRED
--- AND HOW TO PROCEED ARE 'VERY VERY VERY WELCOME' :P (REDUCTIONS NOT YET APPLIED)
---transformationApply wc f xs = mmap.flip.map2 (mmap f $ flipedmatch xs, substitute wc)
---                            where flipedmatch = flip $ match wc
 
 -- Applying a list of patterns until one succeeds
 transformationsApply :: Eq a => a -> ([a] -> [a]) -> [([a], [a])] -> [a] -> Maybe [a]
-transformationsApply _ _ [] _ = Nothing
-transformationsApply wc f (p:ps) xs = orElse tf tfs
-    where tf = transformationApply wc f xs p
-          tfs = transformationsApply wc f ps xs
+--transformationsApply _ _ [] _ = Nothing
+--transformationsApply wc f (p:ps) xs = orElse tf tfs
+--    where tf = transformationApply wc f xs p
+--          tfs = transformationsApply wc f ps xs
+transformationsApply wc f ps xs = foldr1 (\x acc -> orElse x acc) (map (transformationApply wc f xs) ps) 
